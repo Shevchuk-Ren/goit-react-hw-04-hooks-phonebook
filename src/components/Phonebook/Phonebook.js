@@ -1,72 +1,83 @@
 import { v4 as uuidv4 } from 'uuid';
-import React from 'react';
+import { useState } from 'react';
 import { Form, Label, Input, Button } from './PhoneBook.styled';
 
-class Phonebook extends React.Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export default function Phonebook({ onSubmit }) {
+  // state = {
+  //   name: '',
+  //   number: '',
+  // };
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleSubmitForm = evt => {
+  const handleSubmitForm = evt => {
     evt.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    console.log(number);
+    const a = { name: name };
+    const b = { number: number };
+    console.log(a);
+    onSubmit(Object.assign({}, a, b));
+    reset();
   };
 
-  handleInputChange = evt => {
-    this.setState({
-      [evt.currentTarget.name]: evt.currentTarget.value,
-    });
+  const handleInputChange = evt => {
+    // this.setState({
+    //   [evt.currentTarget.name]: evt.currentTarget.value,
+    // });
+    switch (evt.currentTarget.name) {
+      case 'name':
+        setName(evt.currentTarget.value);
+        break;
+      case 'number':
+        setNumber(evt.currentTarget.value);
+        break;
+
+      default:
+        return;
+    }
+    console.log(name);
   };
 
-  reset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
+  const reset = () => {
+    setNumber('');
+    setName('');
   };
 
-  render() {
-    const { name, number } = this.state;
-    const formNameId = uuidv4();
-    const formNumberId = uuidv4();
+  const formNameId = uuidv4();
+  const formNumberId = uuidv4();
 
-    return (
-      <Form onSubmit={this.handleSubmitForm}>
-        <Label htmlFor={formNameId}>
-          Name
-          <Input
-            id={formNameId}
-            type="text"
-            value={name}
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-            required
-            onChange={this.handleInputChange}
-          />
-        </Label>
+  return (
+    <Form onSubmit={handleSubmitForm}>
+      <Label htmlFor={formNameId}>
+        Name
+        <Input
+          id={formNameId}
+          type="text"
+          value={name}
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+          required
+          onChange={handleInputChange}
+        />
+      </Label>
 
-        <Label htmlFor={formNumberId}>
-          Number
-          <Input
-            id={formNumberId}
-            type="tel"
-            name="number"
-            value={number}
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-            required
-            onChange={this.handleInputChange}
-          />
-        </Label>
-        <Button type="submit" onClick={this.addNameFhoneBook}>
-          Add contact
-        </Button>
-      </Form>
-    );
-  }
+      <Label htmlFor={formNumberId}>
+        Number
+        <Input
+          id={formNumberId}
+          type="tel"
+          name="number"
+          value={number}
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+          required
+          onChange={handleInputChange}
+        />
+      </Label>
+      <Button type="submit" onClick={handleSubmitForm}>
+        Add contact
+      </Button>
+    </Form>
+  );
 }
-
-export default Phonebook;

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Section from '../Section';
 import Phonebook from '../Phonebook';
@@ -6,52 +6,25 @@ import ContactList from '../ContactList';
 import Filter from '../Filter';
 import Container from '../Container';
 
-class App extends React.Component {
-  state = {
-    filter: '',
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-  };
+export default function App() {
+  // state = {
+  //   filter: '',
+  //   contacts: [
+  //     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  //     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  //     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  //     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  //   ],
+  // };
+  const [filter, setFilter] = useState('');
+  const [contacts, setContacts] = useState([
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
 
-  filterContacts = evt => {
-    this.setState({
-      filter: evt.currentTarget.value,
-    });
-  };
-
-  formSubmithanler = data => {
-    data.id = uuidv4();
-    const normalizedName = this.state.contacts.find(
-      contact => contact.name.toLowerCase() === data.name.toLowerCase(),
-    );
-
-    if (normalizedName) {
-      alert(`${data.name} is alredy in contacts.`);
-      return;
-    }
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, data],
-    }));
-  };
-
-  deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
-  };
-
-  visibleContact = () => {
-    const { contacts, filter } = this.state;
-    return contacts.filter(contact =>
-      contact.name.toLocaleLowerCase().includes(filter.toLowerCase()),
-    );
-  };
-
-  componentDidMount = () => {
+  const componentDidMount = () => {
     const storage = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(storage);
 
@@ -59,31 +32,61 @@ class App extends React.Component {
       this.setState({ contacts: parsedContacts });
     }
   };
-  componentDidUpdate = (prevProps, prevState) => {
+  const componentDidUpdate = (prevProps, prevState) => {
     if (prevState.contacts !== this.state.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
   };
-  render() {
-    const { filter } = this.state;
-    const visibleContact = this.visibleContact();
 
-    return (
-      <Container>
-        <Section title="Phonebook">
-          <Phonebook onSubmit={this.formSubmithanler} />
-        </Section>
+  const filterContacts = evt => {
+    // this.setState({
+    //   filter: evt.currentTarget.value,
+    // });
+    setFilter(evt.currentTarget.value);
+  };
 
-        <Section title="Contacts">
-          <Filter onChange={this.filterContacts} filter={filter}></Filter>
-          <ContactList
-            contacts={visibleContact}
-            onDelete={this.deleteContact}
-          ></ContactList>
-        </Section>
-      </Container>
+  const formSubmithanler = data => {
+    data.id = uuidv4();
+    console.log(data);
+    const normalizedName = contacts.find(
+      contact => contact.name.toLowerCase() === data.name.toLowerCase(),
     );
-  }
-}
+    console.log(contacts, `contacts`);
+    if (normalizedName) {
+      alert(`${data.name} is alredy in contacts.`);
+      return;
+    }
 
-export default App;
+    setContacts(prevState => [...prevState, data]);
+  };
+
+  const deleteContact = id => {
+    // this.setState(prevState => ({
+    //   contacts: prevState.contacts.filter(contact => contact.id !== id),
+    // }));
+    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+  };
+
+  const visibleContact = () => {
+    console.log(`aaaa`);
+    return contacts.filter(contact =>
+      contact.name.toLocaleLowerCase().includes(filter.toLowerCase()),
+    );
+  };
+
+  return (
+    <Container>
+      <Section title="Phonebook">
+        <Phonebook onSubmit={formSubmithanler} />
+      </Section>
+
+      <Section title="Contacts">
+        <Filter onChange={filterContacts} filter={filter}></Filter>
+        <ContactList
+          contacts={visibleContact()}
+          onDelete={deleteContact}
+        ></ContactList>
+      </Section>
+    </Container>
+  );
+}
