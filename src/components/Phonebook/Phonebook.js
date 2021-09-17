@@ -3,27 +3,22 @@ import { useState } from 'react';
 import { Form, Label, Input, Button } from './PhoneBook.styled';
 
 export default function Phonebook({ onSubmit }) {
-  // state = {
-  //   name: '',
-  //   number: '',
-  // };
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  // const [name, setName] = useHandleS('name', "" );
+  // const [number, setNumber] = useHandleS('number', "" );
 
   const handleSubmitForm = evt => {
     evt.preventDefault();
     console.log(number);
-    const a = { name: name };
-    const b = { number: number };
-    console.log(a);
-    onSubmit(Object.assign({}, a, b));
+    const nameObj = { name: name };
+    const numberObj = { number: number };
+
+    onSubmit(Object.assign({}, nameObj, numberObj));
     reset();
   };
 
   const handleInputChange = evt => {
-    // this.setState({
-    //   [evt.currentTarget.name]: evt.currentTarget.value,
-    // });
     switch (evt.currentTarget.name) {
       case 'name':
         setName(evt.currentTarget.value);
@@ -35,7 +30,6 @@ export default function Phonebook({ onSubmit }) {
       default:
         return;
     }
-    console.log(name);
   };
 
   const reset = () => {
