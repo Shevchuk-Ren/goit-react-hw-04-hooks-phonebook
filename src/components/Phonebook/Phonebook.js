@@ -5,15 +5,11 @@ import { Form, Label, Input, Button } from './PhoneBook.styled';
 export default function Phonebook({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // const [name, setName] = useHandleS('name', "" );
-  // const [number, setNumber] = useHandleS('number', "" );
 
   const handleSubmitForm = evt => {
     evt.preventDefault();
-    console.log(number);
     const nameObj = { name: name };
     const numberObj = { number: number };
-
     onSubmit(Object.assign({}, nameObj, numberObj));
     reset();
   };

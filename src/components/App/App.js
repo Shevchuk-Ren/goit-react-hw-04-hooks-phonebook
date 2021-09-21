@@ -32,7 +32,6 @@ export default function App() {
 
   const formSubmithanler = data => {
     data.id = uuidv4();
-    console.log(data);
     const normalizedName = contacts.find(
       contact => contact.name.toLowerCase() === data.name.toLowerCase(),
     );
